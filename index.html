@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mancala Game with Minimax AI</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <h1>Mancala Game with Minimax AI</h1>
+
+    <div class="main-container">
+      <!-- Tutorial Section - Left Column -->
+      <div class="tutorial-container">
+        <h2>How to Play Mancala</h2>
+        <div class="tutorial-content">
+          <!-- Replace the existing tutorial step 1 SVG with this updated version -->
+          <!-- Step 1 with marbles -->
+<div class="tutorial-step active" id="tutorial-step-1">
+    <h3><span class="step-number">1</span> Game Setup</h3>
+    <p>Mancala is played on a board with 12 small pits (6 on each side) and 2 larger stores at the ends.</p>
+    <p>Each small pit starts with 4 seeds. The store on your right belongs to you.</p>
+    <svg width="300" height="160" viewBox="0 0 300 160" class="tutorial-image">
+        <rect x="10" y="20" width="280" height="120" rx="10" fill="#9b6b3c" />
+        
+        <!-- Player 2 pits -->
+        <circle cx="40" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="46" r="3" fill="#8B4513" />
+        <circle cx="44" cy="46" r="3" fill="#8B4513" />
+        <circle cx="36" cy="54" r="3" fill="#8B4513" />
+        <circle cx="44" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="76" cy="46" r="3" fill="#8B4513" />
+        <circle cx="84" cy="46" r="3" fill="#8B4513" />
+        <circle cx="76" cy="54" r="3" fill="#8B4513" />
+        <circle cx="84" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="120" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="116" cy="46" r="3" fill="#8B4513" />
+        <circle cx="124" cy="46" r="3" fill="#8B4513" />
+        <circle cx="116" cy="54" r="3" fill="#8B4513" />
+        <circle cx="124" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="46" r="3" fill="#8B4513" />
+        <circle cx="164" cy="46" r="3" fill="#8B4513" />
+        <circle cx="156" cy="54" r="3" fill="#8B4513" />
+        <circle cx="164" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="46" r="3" fill="#8B4513" />
+        <circle cx="204" cy="46" r="3" fill="#8B4513" />
+        <circle cx="196" cy="54" r="3" fill="#8B4513" />
+        <circle cx="204" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="46" r="3" fill="#8B4513" />
+        <circle cx="244" cy="46" r="3" fill="#8B4513" />
+        <circle cx="236" cy="54" r="3" fill="#8B4513" />
+        <circle cx="244" cy="54" r="3" fill="#8B4513" />
+        
+        <!-- Player 1 pits -->
+        <circle cx="40" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="106" r="3" fill="#8B4513" />
+        <circle cx="44" cy="106" r="3" fill="#8B4513" />
+        <circle cx="36" cy="114" r="3" fill="#8B4513" />
+        <circle cx="44" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="76" cy="106" r="3" fill="#8B4513" />
+        <circle cx="84" cy="106" r="3" fill="#8B4513" />
+        <circle cx="76" cy="114" r="3" fill="#8B4513" />
+        <circle cx="84" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="120" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="116" cy="106" r="3" fill="#8B4513" />
+        <circle cx="124" cy="106" r="3" fill="#8B4513" />
+        <circle cx="116" cy="114" r="3" fill="#8B4513" />
+        <circle cx="124" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="106" r="3" fill="#8B4513" />
+        <circle cx="164" cy="106" r="3" fill="#8B4513" />
+        <circle cx="156" cy="114" r="3" fill="#8B4513" />
+        <circle cx="164" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="106" r="3" fill="#8B4513" />
+        <circle cx="204" cy="106" r="3" fill="#8B4513" />
+        <circle cx="196" cy="114" r="3" fill="#8B4513" />
+        <circle cx="204" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="106" r="3" fill="#8B4513" />
+        <circle cx="244" cy="106" r="3" fill="#8B4513" />
+        <circle cx="236" cy="114" r="3" fill="#8B4513" />
+        <circle cx="244" cy="114" r="3" fill="#8B4513" />
+        
+        <!-- Stores (initially empty) -->
+        <ellipse cx="280" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+        <ellipse cx="20" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+        
+        <text x="150" y="160" text-anchor="middle" fill="white" font-size="12">Start with 4 seeds in each pit</text>
+    </svg>
+</div>
+
+<!-- Step 2 with marbles -->
+<div class="tutorial-step" id="tutorial-step-2">
+    <h3><span class="step-number">2</span> Making a Move</h3>
+    <p>On your turn, select one of your pits. All seeds from that pit will be picked up.</p>
+    <p>Seeds are dropped one-by-one into each pit moving counter-clockwise, including your store but skipping your opponent's store.</p>
+    <svg width="300" height="160" viewBox="0 0 300 160" class="tutorial-image">
+        <rect x="10" y="20" width="280" height="120" rx="10" fill="#9b6b3c" />
+        
+        <!-- Player 2 pits -->
+        <circle cx="40" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="46" r="3" fill="#8B4513" />
+        <circle cx="44" cy="46" r="3" fill="#8B4513" />
+        <circle cx="36" cy="54" r="3" fill="#8B4513" />
+        <circle cx="44" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="76" cy="46" r="3" fill="#8B4513" />
+        <circle cx="84" cy="46" r="3" fill="#8B4513" />
+        <circle cx="76" cy="54" r="3" fill="#8B4513" />
+        <circle cx="84" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="120" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="116" cy="46" r="3" fill="#8B4513" />
+        <circle cx="124" cy="46" r="3" fill="#8B4513" />
+        <circle cx="116" cy="54" r="3" fill="#8B4513" />
+        <circle cx="124" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="46" r="3" fill="#8B4513" />
+        <circle cx="164" cy="46" r="3" fill="#8B4513" />
+        <circle cx="156" cy="54" r="3" fill="#8B4513" />
+        <circle cx="164" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="46" r="3" fill="#8B4513" />
+        <circle cx="204" cy="46" r="3" fill="#8B4513" />
+        <circle cx="196" cy="54" r="3" fill="#8B4513" />
+        <circle cx="204" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="46" r="3" fill="#8B4513" />
+        <circle cx="244" cy="46" r="3" fill="#8B4513" />
+        <circle cx="236" cy="54" r="3" fill="#8B4513" />
+        <circle cx="244" cy="54" r="3" fill="#8B4513" />
+        
+        <!-- Player 1 pits -->
+        <circle cx="40" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="106" r="3" fill="#8B4513" />
+        <circle cx="44" cy="106" r="3" fill="#8B4513" />
+        <circle cx="36" cy="114" r="3" fill="#8B4513" />
+        <circle cx="44" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="110" r="15" fill="#c9aa7c" stroke="#ff7f50" stroke-width="3" />
+        <!-- Empty selected pit - seeds are being moved -->
+        
+        <circle cx="120" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="116" cy="106" r="3" fill="#8B4513" />
+        <circle cx="124" cy="106" r="3" fill="#8B4513" />
+        <circle cx="116" cy="114" r="3" fill="#8B4513" />
+        <circle cx="124" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="106" r="3" fill="#8B4513" />
+        <circle cx="164" cy="106" r="3" fill="#8B4513" />
+        <circle cx="156" cy="114" r="3" fill="#8B4513" />
+        <circle cx="164" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="106" r="3" fill="#8B4513" />
+        <circle cx="204" cy="106" r="3" fill="#8B4513" />
+        <circle cx="196" cy="114" r="3" fill="#8B4513" />
+        <circle cx="204" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="106" r="3" fill="#8B4513" />
+        <circle cx="244" cy="106" r="3" fill="#8B4513" />
+        <circle cx="236" cy="114" r="3" fill="#8B4513" />
+        <circle cx="244" cy="114" r="3" fill="#8B4513" />
+        
+        <!-- Stores -->
+        <ellipse cx="280" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+        <ellipse cx="20" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+        
+        <!-- Animation of seeds moving -->
+        <circle cx="100" cy="90" r="3" fill="#8B4513" />
+        <circle cx="150" cy="70" r="3" fill="#8B4513" />
+        <circle cx="200" cy="60" r="3" fill="#8B4513" />
+        <circle cx="250" cy="70" r="3" fill="#8B4513" />
+        
+        <path d="M80,110 Q120,70 160,50 Q200,30 280,80" stroke="#ff7f50" stroke-width="2" fill="none" stroke-dasharray="4" />
+
+        <text x="150" y="160" text-anchor="middle" fill="white" font-size="12">Seeds move counter-clockwise</text>
+    </svg>
+</div>
+
+<!-- Step 3 with marbles -->
+<div class="tutorial-step" id="tutorial-step-3">
+    <h3><span class="step-number">3</span> Extra Turn</h3>
+    <p>If your last seed lands in your store, you get an extra turn.</p>
+    <p>Plan your moves carefully to get multiple turns!</p>
+    <svg width="300" height="160" viewBox="0 0 300 160" class="tutorial-image">
+        <rect x="10" y="20" width="280" height="120" rx="10" fill="#9b6b3c" />
+        
+        <!-- Player 2 pits -->
+        <circle cx="40" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="46" r="3" fill="#8B4513" />
+        <circle cx="44" cy="46" r="3" fill="#8B4513" />
+        <circle cx="36" cy="54" r="3" fill="#8B4513" />
+        <circle cx="44" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="76" cy="46" r="3" fill="#8B4513" />
+        <circle cx="84" cy="46" r="3" fill="#8B4513" />
+        <circle cx="76" cy="54" r="3" fill="#8B4513" />
+        <circle cx="84" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="120" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="116" cy="46" r="3" fill="#8B4513" />
+        <circle cx="124" cy="46" r="3" fill="#8B4513" />
+        <circle cx="116" cy="54" r="3" fill="#8B4513" />
+        <circle cx="124" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="46" r="3" fill="#8B4513" />
+        <circle cx="164" cy="46" r="3" fill="#8B4513" />
+        <circle cx="156" cy="54" r="3" fill="#8B4513" />
+        <circle cx="164" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="46" r="3" fill="#8B4513" />
+        <circle cx="204" cy="46" r="3" fill="#8B4513" />
+        <circle cx="196" cy="54" r="3" fill="#8B4513" />
+        <circle cx="204" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="46" r="3" fill="#8B4513" />
+        <circle cx="244" cy="46" r="3" fill="#8B4513" />
+        <circle cx="236" cy="54" r="3" fill="#8B4513" />
+        <circle cx="244" cy="54" r="3" fill="#8B4513" />
+        
+        <!-- Player 1 pits -->
+        <circle cx="40" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="106" r="3" fill="#8B4513" />
+        <circle cx="44" cy="106" r="3" fill="#8B4513" />
+        <circle cx="36" cy="114" r="3" fill="#8B4513" />
+        <circle cx="44" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="76" cy="106" r="3" fill="#8B4513" />
+        <circle cx="84" cy="106" r="3" fill="#8B4513" />
+        <circle cx="76" cy="114" r="3" fill="#8B4513" />
+        <circle cx="84" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="120" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="116" cy="106" r="3" fill="#8B4513" />
+        <circle cx="124" cy="106" r="3" fill="#8B4513" />
+        <circle cx="116" cy="114" r="3" fill="#8B4513" />
+        <circle cx="124" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="106" r="3" fill="#8B4513" />
+        <circle cx="164" cy="106" r="3" fill="#8B4513" />
+        <circle cx="156" cy="114" r="3" fill="#8B4513" />
+        <circle cx="164" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="106" r="3" fill="#8B4513" />
+        <circle cx="204" cy="106" r="3" fill="#8B4513" />
+        <circle cx="196" cy="114" r="3" fill="#8B4513" />
+        <circle cx="204" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="106" r="3" fill="#8B4513" />
+        <circle cx="244" cy="106" r="3" fill="#8B4513" />
+        <circle cx="236" cy="114" r="3" fill="#8B4513" />
+        <circle cx="244" cy="114" r="3" fill="#8B4513" />
+        
+        <!-- Stores -->
+        <ellipse cx="280" cy="80" rx="15" ry="40" fill="#c9aa7c" stroke="#ff7f50" stroke-width="3" />
+        <!-- Store with seeds -->
+        <circle cx="280" cy="60" r="3" fill="#8B4513" />
+        <circle cx="280" cy="70" r="3" fill="#8B4513" />
+        <circle cx="280" cy="80" r="3" fill="#8B4513" />
+        <circle cx="280" cy="90" r="3" fill="#8B4513" />
+        <circle cx="280" cy="100" r="3" fill="#8B4513" />
+        
+        <ellipse cx="20" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+        
+        <text x="280" y="80" text-anchor="middle" fill="#333" font-size="14">+1</text>
+        <text x="230" y="160" text-anchor="middle" fill="white" font-size="12">Extra turn!</text>
+    </svg>
+</div>
+
+<!-- Step 4 with marbles -->
+<div class="tutorial-step" id="tutorial-step-4">
+    <h3><span class="step-number">4</span> Capturing Seeds</h3>
+    <p>If your last seed lands in an empty pit on your side, you capture that seed and all seeds in the opposite pit.</p>
+    <p>All captured seeds go into your store.</p>
+    <svg width="300" height="160" viewBox="0 0 300 160" class="tutorial-image">
+        <rect x="10" y="20" width="280" height="120" rx="10" fill="#9b6b3c" />
+        
+        <!-- Player 2 pits -->
+        <circle cx="40" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="46" r="3" fill="#8B4513" />
+        <circle cx="44" cy="46" r="3" fill="#8B4513" />
+        <circle cx="36" cy="54" r="3" fill="#8B4513" />
+        <circle cx="44" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="76" cy="46" r="3" fill="#8B4513" />
+        <circle cx="84" cy="46" r="3" fill="#8B4513" />
+        <circle cx="76" cy="54" r="3" fill="#8B4513" />
+        <circle cx="84" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="120" cy="50" r="15" fill="#c9aa7c" />
+        <!-- Opposite pit with seeds to be captured -->
+        <circle cx="116" cy="46" r="3" fill="#8B4513" />
+        <circle cx="124" cy="46" r="3" fill="#8B4513" />
+        <circle cx="116" cy="54" r="3" fill="#8B4513" />
+        <circle cx="124" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="46" r="3" fill="#8B4513" />
+        <circle cx="164" cy="46" r="3" fill="#8B4513" />
+        <circle cx="156" cy="54" r="3" fill="#8B4513" />
+        <circle cx="164" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="46" r="3" fill="#8B4513" />
+        <circle cx="204" cy="46" r="3" fill="#8B4513" />
+        <circle cx="196" cy="54" r="3" fill="#8B4513" />
+        <circle cx="204" cy="54" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="50" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="46" r="3" fill="#8B4513" />
+        <circle cx="244" cy="46" r="3" fill="#8B4513" />
+        <circle cx="236" cy="54" r="3" fill="#8B4513" />
+        <circle cx="244" cy="54" r="3" fill="#8B4513" />
+        
+        <!-- Player 1 pits -->
+        <circle cx="40" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="36" cy="106" r="3" fill="#8B4513" />
+        <circle cx="44" cy="106" r="3" fill="#8B4513" />
+        <circle cx="36" cy="114" r="3" fill="#8B4513" />
+        <circle cx="44" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="80" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="76" cy="106" r="3" fill="#8B4513" />
+        <circle cx="84" cy="106" r="3" fill="#8B4513" />
+        <circle cx="76" cy="114" r="3" fill="#8B4513" />
+        <circle cx="84" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="120" cy="110" r="15" fill="#c9aa7c" stroke="#ff7f50" stroke-width="3" />
+        <!-- Empty pit with just one seed landing -->
+        <circle cx="120" cy="110" r="3" fill="#8B4513" />
+        
+        <circle cx="160" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="156" cy="106" r="3" fill="#8B4513" />
+        <circle cx="164" cy="106" r="3" fill="#8B4513" />
+        <circle cx="156" cy="114" r="3" fill="#8B4513" />
+        <circle cx="164" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="200" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="196" cy="106" r="3" fill="#8B4513" />
+        <circle cx="204" cy="106" r="3" fill="#8B4513" />
+        <circle cx="196" cy="114" r="3" fill="#8B4513" />
+        <circle cx="204" cy="114" r="3" fill="#8B4513" />
+        
+        <circle cx="240" cy="110" r="15" fill="#e6d2b5" />
+        <circle cx="236" cy="106" r="3" fill="#8B4513" />
+        <circle cx="244" cy="106" r="3" fill="#8B4513" />
+        <circle cx="236" cy="114" r="3" fill="#8B4513" />
+        <circle cx="244" cy="114" r="3" fill="#8B4513" />
+        
+        <!-- Stores -->
+        <ellipse cx="280" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+        <!-- Player's store with some seeds -->
+        <circle cx="280" cy="65" r="3" fill="#8B4513" />
+        <circle cx="280" cy="75" r="3" fill="#8B4513" />
+        <circle cx="280" cy="85" r="3" fill="#8B4513" />
+        
+        <ellipse cx="20" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+        
+        <path d="M120,110 L120,50" stroke="#ff7f50" stroke-width="2" stroke-dasharray="4" />
+        <path d="M120,50 Q160,70 200,80 Q240,90 280,80" stroke="#ff7f50" stroke-width="2" fill="none" />
+        <path d="M120,110 Q160,90 200,80 Q240,70 280,80" stroke="#ff7f50" stroke-width="2" fill="none" />
+        <text x="150" y="160" text-anchor="middle" fill="white" font-size="12">Capture opposite seeds</text>
+    </svg>
+</div>
+
+
+          <div class="tutorial-step" id="tutorial-step-5">
+            <h3><span class="step-number">5</span> Game End</h3>
+            <p>The game ends when all pits on one side are empty.</p>
+            <p>Any remaining seeds on the other side go to that player's store.</p>
+            <p>The player with the most seeds in their store wins!</p>
+            <svg width="300" height="160" viewBox="0 0 300 160" class="tutorial-image">
+                <rect x="10" y="20" width="280" height="120" rx="10" fill="#9b6b3c" />
+                
+                <!-- Player 2 pits with remaining seeds -->
+                <circle cx="40" cy="50" r="15" fill="#e6d2b5" />
+                <circle cx="36" cy="46" r="3" fill="#8B4513" />
+                <circle cx="44" cy="46" r="3" fill="#8B4513" />
+                <circle cx="36" cy="54" r="3" fill="#8B4513" />
+                
+                <circle cx="80" cy="50" r="15" fill="#e6d2b5" />
+                <circle cx="76" cy="46" r="3" fill="#8B4513" />
+                <circle cx="84" cy="46" r="3" fill="#8B4513" />
+                
+                <circle cx="120" cy="50" r="15" fill="#e6d2b5" />
+                <circle cx="116" cy="46" r="3" fill="#8B4513" />
+                <circle cx="124" cy="46" r="3" fill="#8B4513" />
+                <circle cx="116" cy="54" r="3" fill="#8B4513" />
+                
+                <circle cx="160" cy="50" r="15" fill="#e6d2b5" />
+                <circle cx="156" cy="46" r="3" fill="#8B4513" />
+                <circle cx="164" cy="46" r="3" fill="#8B4513" />
+                <circle cx="156" cy="54" r="3" fill="#8B4513" />
+                
+                <circle cx="200" cy="50" r="15" fill="#e6d2b5" />
+                <circle cx="196" cy="46" r="3" fill="#8B4513" />
+                <circle cx="204" cy="46" r="3" fill="#8B4513" />
+                
+                <circle cx="240" cy="50" r="15" fill="#e6d2b5" />
+                <circle cx="236" cy="46" r="3" fill="#8B4513" />
+                <circle cx="244" cy="46" r="3" fill="#8B4513" />
+                <circle cx="236" cy="54" r="3" fill="#8B4513" />
+                
+                <!-- Player 1 pits (all empty) -->
+                <circle cx="40" cy="110" r="15" fill="#e6d2b5" stroke="#555" stroke-width="1" />
+                <circle cx="80" cy="110" r="15" fill="#e6d2b5" stroke="#555" stroke-width="1" />
+                <circle cx="120" cy="110" r="15" fill="#e6d2b5" stroke="#555" stroke-width="1" />
+                <circle cx="160" cy="110" r="15" fill="#e6d2b5" stroke="#555" stroke-width="1" />
+                <circle cx="200" cy="110" r="15" fill="#e6d2b5" stroke="#555" stroke-width="1" />
+                <circle cx="240" cy="110" r="15" fill="#e6d2b5" stroke="#555" stroke-width="1" />
+                
+                <!-- Stores with accumulated seeds -->
+                <ellipse cx="280" cy="80" rx="15" ry="40" fill="#e6d2b5" />
+                <!-- Player 1's store with many seeds -->
+                <circle cx="280" cy="55" r="3" fill="#8B4513" />
+                <circle cx="280" cy="63" r="3" fill="#8B4513" />
+                <circle cx="280" cy="71" r="3" fill="#8B4513" />
+                <circle cx="280" cy="79" r="3" fill="#8B4513" />
+                <circle cx="280" cy="87" r="3" fill="#8B4513" />
+                <circle cx="280" cy="95" r="3" fill="#8B4513" />
+                <circle cx="275" cy="59" r="3" fill="#8B4513" />
+                <circle cx="275" cy="67" r="3" fill="#8B4513" />
+                <circle cx="275" cy="75" r="3" fill="#8B4513" />
+                <circle cx="275" cy="83" r="3" fill="#8B4513" />
+                <circle cx="275" cy="91" r="3" fill="#8B4513" />
+                <circle cx="275" cy="99" r="3" fill="#8B4513" />
+                <circle cx="285" cy="59" r="3" fill="#8B4513" />
+                <circle cx="285" cy="67" r="3" fill="#8B4513" />
+                <circle cx="285" cy="75" r="3" fill="#8B4513" />
+                <circle cx="285" cy="83" r="3" fill="#8B4513" />
+                <circle cx="285" cy="91" r="3" fill="#8B4513" />
+                <circle cx="285" cy="99" r="3" fill="#8B4513" />
+                
+                <ellipse cx="20" cy="80" rx="15" ry="40" fill="#c9aa7c" />
+                <!-- Player 2's store with seeds -->
+                <circle cx="20" cy="60" r="3" fill="#8B4513" />
+                <circle cx="20" cy="68" r="3" fill="#8B4513" />
+                <circle cx="20" cy="76" r="3" fill="#8B4513" />
+                <circle cx="20" cy="84" r="3" fill="#8B4513" />
+                <circle cx="20" cy="92" r="3" fill="#8B4513" />
+                <circle cx="20" cy="100" r="3" fill="#8B4513" />
+                <circle cx="15" cy="64" r="3" fill="#8B4513" />
+                <circle cx="15" cy="72" r="3" fill="#8B4513" />
+                <circle cx="15" cy="80" r="3" fill="#8B4513" />
+                <circle cx="15" cy="88" r="3" fill="#8B4513" />
+                <circle cx="15" cy="96" r="3" fill="#8B4513" />
+                <circle cx="25" cy="64" r="3" fill="#8B4513" />
+                <circle cx="25" cy="72" r="3" fill="#8B4513" />
+                <circle cx="25" cy="80" r="3" fill="#8B4513" />
+                <circle cx="25" cy="88" r="3" fill="#8B4513" />
+                <circle cx="25" cy="96" r="3" fill="#8B4513" />
+                
+                <!-- Score indicators -->
+                <text x="20" cy="80" text-anchor="middle" fill="#333" font-size="14">30</text>
+                <text x="280" cy="80" text-anchor="middle" fill="#333" font-size="14">18</text>
+                
+                <!-- Arrow showing remaining seeds being collected -->
+                <path d="M120,50 Q150,30 20,80" stroke="#ff7f50" stroke-width="2" fill="none" stroke-dasharray="4" />
+                
+                <text x="150" y="160" text-anchor="middle" fill="white" font-size="12">Player with most seeds wins!</text>
+            </svg>
+        </div>
+        </div>
+        <div class="tutorial-nav">
+          <button id="prev-step" disabled>Previous</button>
+          <span id="step-indicator">Step 1 of 5</span>
+          <button id="next-step">Next</button>
+        </div>
+      </div>
+
+      <!-- Game Board - Middle Column -->
+      <div class="game-container">
+        <div class="player-info player1">Player 2 (AI)</div>
+        <div class="board" id="game-board">
+          <div class="row" id="player1-row">
+            <div class="pit" id="pit-12" data-index="12"></div>
+            <div class="pit" id="pit-11" data-index="11"></div>
+            <div class="pit" id="pit-10" data-index="10"></div>
+            <div class="pit" id="pit-9" data-index="9"></div>
+            <div class="pit" id="pit-8" data-index="8"></div>
+            <div class="pit" id="pit-7" data-index="7"></div>
+          </div>
+
+          <div class="board-middle">
+            <div class="store" id="store-1"></div>
+            <div style="width: 480px"></div>
+            <div class="store" id="store-0"></div>
+          </div>
+
+          <div class="row" id="player0-row">
+            <div class="pit" id="pit-0" data-index="0"></div>
+            <div class="pit" id="pit-1" data-index="1"></div>
+            <div class="pit" id="pit-2" data-index="2"></div>
+            <div class="pit" id="pit-3" data-index="3"></div>
+            <div class="pit" id="pit-4" data-index="4"></div>
+            <div class="pit" id="pit-5" data-index="5"></div>
+          </div>
+        </div>
+        <div class="player-info player0">Player 1 (You)</div>
+
+        <div class="status" id="status">Player 1's turn</div>
+
+        <div class="controls">
+          <button id="new-game">New Game</button>
+        </div>
+      </div>
+
+      <!-- AI Settings - Right Column -->
+      <div class="settings-container">
+        <div class="ai-settings">
+          <h3>AI Settings</h3>
+          <div>
+            <label for="ai-depth">Difficulty Level:</label>
+            <select id="ai-depth">
+              <option value="1">Easy</option>
+              <option value="3" selected>Medium</option>
+              <option value="5">Hard</option>
+              <option value="7">Expert</option>
+            </select>
+          </div>
+          <div style="margin-top: 10px">
+            <label for="animation-speed">Animation Speed:</label>
+            <select id="animation-speed">
+              <option value="fast">Fast</option>
+              <option value="normal" selected>Normal</option>
+              <option value="slow">Slow</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="thinking" id="thinking">AI is thinking...</div>
+    <script src="game.js"></script>
+    <script src="tutorial.js"></script>
+  </body>
+</html>
